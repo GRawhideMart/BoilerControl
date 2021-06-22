@@ -1,0 +1,838 @@
+[
+    {
+        "id": "fcdb15c4.576f1",
+        "type": "tab",
+        "label": "Caldaia",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "cbbac57.add8338",
+        "type": "telegram sender",
+        "z": "fcdb15c4.576f1",
+        "name": "show keyboard",
+        "bot": "8e2019a6.d16178",
+        "x": 585,
+        "y": 551,
+        "wires": [
+            [
+                "e3d926e0.19331"
+            ]
+        ]
+    },
+    {
+        "id": "ea2c57c5.c6b448",
+        "type": "function",
+        "z": "fcdb15c4.576f1",
+        "name": "keyboard",
+        "func": "var opts = {\n  reply_to_message_id: msg.payload.messageId,\n  reply_markup: JSON.stringify({\n    keyboard: [\n      ['/accendi'],\n      ['/spegni'],\n      ['/stato']],\n      'resize_keyboard' : true, \n      'one_time_keyboard' : false\n  })\n};\n\nmsg.payload.content = 'Ciao, benvenuto. Cosa vuoi fare?';\nmsg.payload.options = opts;\n\nreturn [ msg ];\n",
+        "outputs": "1",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 345,
+        "y": 551,
+        "wires": [
+            [
+                "cbbac57.add8338"
+            ]
+        ]
+    },
+    {
+        "id": "7175962.7f2e868",
+        "type": "telegram command",
+        "z": "fcdb15c4.576f1",
+        "name": "/start",
+        "command": "/start",
+        "bot": "8e2019a6.d16178",
+        "strict": false,
+        "hasresponse": true,
+        "x": 55,
+        "y": 551,
+        "wires": [
+            [
+                "ea2c57c5.c6b448",
+                "15b1a54e.22b72b"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "bde03bbe.dcda4",
+        "type": "telegram command",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "command": "/accendi",
+        "bot": "8e2019a6.d16178",
+        "strict": false,
+        "hasresponse": true,
+        "x": 60,
+        "y": 220,
+        "wires": [
+            [
+                "b4476c83.ee3d98",
+                "15b1a54e.22b72b"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "809e989c.20c5b8",
+        "type": "telegram command",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "command": "/spegni",
+        "bot": "8e2019a6.d16178",
+        "strict": false,
+        "hasresponse": true,
+        "x": 50,
+        "y": 320,
+        "wires": [
+            [
+                "3d78f072.b7cae8",
+                "15b1a54e.22b72b"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "6cc21818.06e13",
+        "type": "telegram command",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "command": "/stato",
+        "bot": "8e2019a6.d16178",
+        "strict": false,
+        "hasresponse": true,
+        "x": 50,
+        "y": 400,
+        "wires": [
+            [
+                "3fada9fb.b2566e",
+                "15b1a54e.22b72b"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "f9bfa199.1a476",
+        "type": "telegram receiver",
+        "z": "fcdb15c4.576f1",
+        "name": "Any Other Message",
+        "bot": "8e2019a6.d16178",
+        "saveDataDir": "",
+        "filterCommands": true,
+        "x": 95,
+        "y": 471,
+        "wires": [
+            [
+                "e0292760.c4ea2",
+                "15b1a54e.22b72b"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "e0292760.c4ea2",
+        "type": "function",
+        "z": "fcdb15c4.576f1",
+        "name": "keyboard and error",
+        "func": "var opts = {\n  reply_to_message_id: msg.payload.messageId,\n  reply_markup: JSON.stringify({\n    keyboard: [\n      ['/accendi'],\n      ['/spegni'],\n      ['/stato']],\n      'resize_keyboard' : true, \n      'one_time_keyboard' : false\n  })\n};\n\nmsg.payload.content = 'Messaggio sbagliato, usa la tastiera qui sotto';\nmsg.payload.options = opts;\n\nreturn [ msg ];\n",
+        "outputs": "1",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 375,
+        "y": 471,
+        "wires": [
+            [
+                "325d02fa.5aaa06"
+            ]
+        ]
+    },
+    {
+        "id": "325d02fa.5aaa06",
+        "type": "telegram sender",
+        "z": "fcdb15c4.576f1",
+        "name": "show keyboard",
+        "bot": "8e2019a6.d16178",
+        "x": 585,
+        "y": 471,
+        "wires": [
+            [
+                "e3d926e0.19331"
+            ]
+        ]
+    },
+    {
+        "id": "6089ecb1.e92974",
+        "type": "mqtt out",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "topic": "cmnd/tasmota/power",
+        "qos": "2",
+        "retain": "true",
+        "broker": "9eadca12.ca705",
+        "x": 740,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "b4476c83.ee3d98",
+        "type": "change",
+        "z": "fcdb15c4.576f1",
+        "name": "Accensione",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "1",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 490,
+        "y": 200,
+        "wires": [
+            [
+                "6089ecb1.e92974"
+            ]
+        ]
+    },
+    {
+        "id": "3d78f072.b7cae8",
+        "type": "change",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "0",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 240,
+        "y": 320,
+        "wires": [
+            [
+                "7f13d522.9bd63c"
+            ]
+        ]
+    },
+    {
+        "id": "7f13d522.9bd63c",
+        "type": "mqtt out",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "topic": "cmnd/tasmota/power",
+        "qos": "2",
+        "retain": "true",
+        "broker": "9eadca12.ca705",
+        "x": 480,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "f9c2eb81.0066e",
+        "type": "mqtt out",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "topic": "cmnd/tasmota/power",
+        "qos": "2",
+        "retain": "true",
+        "broker": "9eadca12.ca705",
+        "x": 480,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "73fc19d3.e4faa8",
+        "type": "mqtt in",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "topic": "stat/tasmota/POWER",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "9eadca12.ca705",
+        "x": 120,
+        "y": 800,
+        "wires": [
+            [
+                "475d015f.27fec8"
+            ]
+        ]
+    },
+    {
+        "id": "475d015f.27fec8",
+        "type": "switch",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "ON",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "OFF",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 350,
+        "y": 800,
+        "wires": [
+            [
+                "8ab983bc.a896f",
+                "873e3fb0.c78c58"
+            ],
+            [
+                "aaac7a9a.3b7768",
+                "873e3fb0.c78c58"
+            ]
+        ]
+    },
+    {
+        "id": "433387c2.4d509",
+        "type": "function",
+        "z": "fcdb15c4.576f1",
+        "name": "keyboard",
+        "func": "var opts = {\n\n  reply_markup: JSON.stringify({\n    keyboard: [\n      ['/accendi'],\n      ['/spegni'],\n      ['/stato']],\n      'resize_keyboard' : true, \n      'one_time_keyboard' : false\n  })\n};\n\n\nmsg.payload.options = opts;\n\nreturn [ msg ];\n",
+        "outputs": "1",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 520,
+        "y": 720,
+        "wires": [
+            [
+                "c275912f.7989b"
+            ]
+        ]
+    },
+    {
+        "id": "3fada9fb.b2566e",
+        "type": "function",
+        "z": "fcdb15c4.576f1",
+        "name": "get_chat_id",
+        "func": "global.set('chatid',msg.originalMessage.chat.id);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 230,
+        "y": 400,
+        "wires": [
+            [
+                "f9c2eb81.0066e"
+            ]
+        ]
+    },
+    {
+        "id": "8fb3c6d1.66101",
+        "type": "change",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.chatId",
+                "pt": "msg",
+                "to": "chatid",
+                "tot": "global"
+            },
+            {
+                "t": "set",
+                "p": "payload.type",
+                "pt": "msg",
+                "to": "message",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.content",
+                "pt": "msg",
+                "to": "La caldaia è accesa",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 340,
+        "y": 720,
+        "wires": [
+            [
+                "433387c2.4d509"
+            ]
+        ]
+    },
+    {
+        "id": "c275912f.7989b",
+        "type": "telegram sender",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "bot": "8e2019a6.d16178",
+        "x": 750,
+        "y": 720,
+        "wires": [
+            [
+                "e3d926e0.19331"
+            ]
+        ]
+    },
+    {
+        "id": "8ab983bc.a896f",
+        "type": "change",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 130,
+        "y": 720,
+        "wires": [
+            [
+                "8fb3c6d1.66101"
+            ]
+        ]
+    },
+    {
+        "id": "c48129f7.4488d",
+        "type": "telegram sender",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "bot": "8e2019a6.d16178",
+        "x": 750,
+        "y": 900,
+        "wires": [
+            [
+                "e3d926e0.19331"
+            ]
+        ]
+    },
+    {
+        "id": "c0834f2d.760a68",
+        "type": "function",
+        "z": "fcdb15c4.576f1",
+        "name": "keyboard",
+        "func": "var opts = {\n\n  reply_markup: JSON.stringify({\n    keyboard: [\n      ['/accendi'],\n      ['/spegni'],\n      ['/stato']],\n      'resize_keyboard' : true, \n      'one_time_keyboard' : false\n  })\n};\n\n\nmsg.payload.options = opts;\n\nreturn [ msg ];\n",
+        "outputs": "1",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 520,
+        "y": 900,
+        "wires": [
+            [
+                "c48129f7.4488d"
+            ]
+        ]
+    },
+    {
+        "id": "fcee3be7.716e68",
+        "type": "change",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.chatId",
+                "pt": "msg",
+                "to": "chatid",
+                "tot": "global"
+            },
+            {
+                "t": "set",
+                "p": "payload.type",
+                "pt": "msg",
+                "to": "message",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.content",
+                "pt": "msg",
+                "to": "La caldaia è spenta",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 340,
+        "y": 900,
+        "wires": [
+            [
+                "c0834f2d.760a68"
+            ]
+        ]
+    },
+    {
+        "id": "aaac7a9a.3b7768",
+        "type": "change",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 130,
+        "y": 900,
+        "wires": [
+            [
+                "fcee3be7.716e68"
+            ]
+        ]
+    },
+    {
+        "id": "742d15c4.87d5a4",
+        "type": "serial in",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "serial": "e33de9a7.a0f528",
+        "x": 70,
+        "y": 80,
+        "wires": [
+            [
+                "46bbdc9a.d59c9c"
+            ]
+        ]
+    },
+    {
+        "id": "46bbdc9a.d59c9c",
+        "type": "function",
+        "z": "fcdb15c4.576f1",
+        "name": "to_number",
+        "func": "n=Number(msg.payload);\nmsg.payload=n;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 280,
+        "y": 80,
+        "wires": [
+            [
+                "965760f7.b0e93",
+                "3a124b8b.332f34"
+            ]
+        ]
+    },
+    {
+        "id": "965760f7.b0e93",
+        "type": "switch",
+        "z": "fcdb15c4.576f1",
+        "name": "sottozero",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lt",
+                "v": "1",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 460,
+        "y": 80,
+        "wires": [
+            [
+                "2de0ca8.1ce9bb6",
+                "b988cb62.b762b8"
+            ]
+        ]
+    },
+    {
+        "id": "3a124b8b.332f34",
+        "type": "debug",
+        "z": "fcdb15c4.576f1",
+        "name": "TemperatureSensor",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "15b1a54e.22b72b",
+        "type": "debug",
+        "z": "fcdb15c4.576f1",
+        "name": "ReceivedMessage",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "originalMessage.text",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 290,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "873e3fb0.c78c58",
+        "type": "debug",
+        "z": "fcdb15c4.576f1",
+        "name": "change_of_state",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 670,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "9a830cb8.6eac2",
+        "type": "change",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.chatId",
+                "pt": "msg",
+                "to": "chatid",
+                "tot": "global"
+            },
+            {
+                "t": "set",
+                "p": "payload.type",
+                "pt": "msg",
+                "to": "message",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.content",
+                "pt": "msg",
+                "to": "Attenzione,siamo sottozero!",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 100,
+        "y": 140,
+        "wires": [
+            [
+                "fe9aca58.874e88"
+            ]
+        ]
+    },
+    {
+        "id": "cc328fb2.d5227",
+        "type": "telegram sender",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "bot": "8e2019a6.d16178",
+        "x": 510,
+        "y": 140,
+        "wires": [
+            [
+                "b4476c83.ee3d98",
+                "e3d926e0.19331"
+            ]
+        ]
+    },
+    {
+        "id": "fe9aca58.874e88",
+        "type": "function",
+        "z": "fcdb15c4.576f1",
+        "name": "keyboard",
+        "func": "var opts = {\n\n  reply_markup: JSON.stringify({\n    keyboard: [\n      ['/accendi'],\n      ['/spegni'],\n      ['/stato']],\n      'resize_keyboard' : true, \n      'one_time_keyboard' : false\n  })\n};\n\n\nmsg.payload.options = opts;\n\nreturn [ msg ];\n",
+        "outputs": "1",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 280,
+        "y": 140,
+        "wires": [
+            [
+                "cc328fb2.d5227"
+            ]
+        ]
+    },
+    {
+        "id": "2de0ca8.1ce9bb6",
+        "type": "function",
+        "z": "fcdb15c4.576f1",
+        "name": "delete payload",
+        "func": "msg.payload={};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 660,
+        "y": 80,
+        "wires": [
+            [
+                "9a830cb8.6eac2"
+            ]
+        ]
+    },
+    {
+        "id": "b988cb62.b762b8",
+        "type": "change",
+        "z": "fcdb15c4.576f1",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Siamo Sotto Zero!",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 20,
+        "wires": [
+            [
+                "3a124b8b.332f34"
+            ]
+        ]
+    },
+    {
+        "id": "e3d926e0.19331",
+        "type": "debug",
+        "z": "fcdb15c4.576f1",
+        "name": "Sent_Message",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.content.text",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 880,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "8e2019a6.d16178",
+        "type": "telegram bot",
+        "z": "",
+        "botname": "VillaCellinaBot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "updatemode": "polling",
+        "pollinterval": "600",
+        "usesocks": false,
+        "sockshost": "",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "9eadca12.ca705",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "local",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "e33de9a7.a0f528",
+        "type": "serial-port",
+        "z": "",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    }
+]
